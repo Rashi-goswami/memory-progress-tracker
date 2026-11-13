@@ -12,6 +12,7 @@ import {
 import DailyLog from './DailyLog'
 import Learning from './Learning'
 import Academics from './Academics'
+import Achievements from './Achievements'
 
 const navigation = [
   { name: 'Overview', icon: LayoutDashboard },
@@ -29,7 +30,9 @@ function App() {
     <div className="min-h-screen bg-slate-950 text-white md:flex">
       <aside className="hidden w-64 shrink-0 border-r border-slate-800 bg-slate-900 p-6 md:block">
         <h1 className="text-2xl font-bold text-cyan-400">MPT.</h1>
-        <p className="mt-1 text-xs text-slate-500">Memory Progress Tracker</p>
+        <p className="mt-1 text-xs text-slate-500">
+          Memory Progress Tracker
+        </p>
 
         <nav className="mt-10 space-y-2">
           {navigation.map(item => {
@@ -111,7 +114,7 @@ function App() {
                   { label: 'Daily Activities', value: 'Track daily' },
                   { label: 'Learning Goals', value: 'Keep learning' },
                   { label: 'Academic Progress', value: 'Stay focused' },
-                  { label: 'Achievements', value: 'Coming soon' },
+                  { label: 'Achievements', value: 'Celebrate wins' },
                 ].map(item => (
                   <div
                     key={item.label}
@@ -126,9 +129,9 @@ function App() {
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h3 className="font-semibold">Your journey starts here</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Use the sidebar to record daily activities, track learning
-                  goals and monitor academic performance. Your current entries
-                  are saved in this browser.
+                  Record daily activities, track learning goals, monitor
+                  academic performance and celebrate your achievements.
+                  Your current entries are saved in this browser.
                 </p>
               </div>
             </div>
@@ -137,16 +140,7 @@ function App() {
           {activePage === 'Daily Log' && <DailyLog />}
           {activePage === 'Learning' && <Learning />}
           {activePage === 'Academics' && <Academics />}
-
-          {activePage === 'Achievements' && (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
-              <Trophy className="mx-auto mb-4 text-amber-400" size={36} />
-              <h2 className="text-xl font-bold">Achievements</h2>
-              <p className="mt-2 text-sm text-slate-400">
-                Achievement tracking is coming soon.
-              </p>
-            </div>
-          )}
+          {activePage === 'Achievements' && <Achievements />}
         </main>
       </div>
     </div>
