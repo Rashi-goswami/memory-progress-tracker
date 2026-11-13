@@ -3,16 +3,19 @@ import { useState } from 'react'
 import {
   LayoutDashboard,
   CalendarDays,
+  CalendarRange,
   BookOpen,
   GraduationCap,
   Trophy,
   Menu,
   X,
 } from 'lucide-react'
+
 import DailyLog from './DailyLog'
 import Learning from './Learning'
 import Academics from './Academics'
 import Achievements from './Achievements'
+import Calendar from './Calendar'
 
 const navigation = [
   { name: 'Overview', icon: LayoutDashboard },
@@ -20,75 +23,73 @@ const navigation = [
   { name: 'Learning', icon: BookOpen },
   { name: 'Academics', icon: GraduationCap },
   { name: 'Achievements', icon: Trophy },
+  { name: 'Calendar', icon: CalendarRange },
 ]
 
 function App() {
   const [activePage, setActivePage] = useState('Overview')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  function handleNavigation(page: string) {
+    setActivePage(page)
+    setMobileMenuOpen(false)
+  }
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white md:flex">
-      <aside className="hidden w-64 shrink-0 border-r border-slate-800 bg-slate-900 p-6 md:block">
-        <h1 className="text-2xl font-bold text-cyan-400">MPT.</h1>
-        <p className="mt-1 text-xs text-slate-500">
-          Memory Progress Tracker
-        </p>
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="flex min-h-screen">
 
-        <nav className="mt-10 space-y-2">
-          {navigation.map(item => {
-            const Icon = item.icon
-            const isActive = activePage === item.name
-
-            return (
-              <button
-                key={item.name}
-                onClick={() => setActivePage(item.name)}
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm transition ${
-                  isActive
-                    ? 'bg-cyan-400/10 text-cyan-400'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                }`}
-              >
-                <Icon size={19} />
-                {item.name}
-              </button>
-            )
-          })}
-        </nav>
-      </aside>
-
-      <div className="min-w-0 flex-1">
-        <header className="flex items-center justify-between border-b border-slate-800 bg-slate-900/70 px-5 py-4 md:px-8">
-          <div>
-            <h2 className="font-semibold">Memory Progress Tracker</h2>
-            <p className="text-xs text-slate-500">Build. Track. Improve.</p>
-          </div>
+        {/* Mobile header */}
+        <div className="fixed left-0 right-0 top-0 z-30 flex items-center justify-between border-b border-slate-800 bg-slate-950 p-4 lg:hidden">
+          <h1 className="text-lg font-bold">
+            Memory<span className="text-cyan-400">.</span>
+          </h1>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg p-2 text-slate-300 hover:bg-slate-800 md:hidden"
-            aria-label="Toggle navigation"
+            className="rounded-lg p-2 hover:bg-slate-800"
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
-        </header>
+        </div>
 
-        {mobileMenuOpen && (
-          <nav className="space-y-2 border-b border-slate-800 bg-slate-900 p-4 md:hidden">
+        {/* Sidebar */}
+        <aside
+          className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-slate-800 bg-slate-950 p-5 transition-transform lg:translate-x-0 ${
+            mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="mb-10 flex items-center justify-between">
+            <h1 className="text-2xl font-bold">
+              Memory<span className="text-cyan-400">.</span>
+            </h1>
+
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg p-2 hover:bg-slate-800 lg:hidden"
+              aria-label="Close navigation menu"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Workspace
+          </p>
+
+          <nav className="space-y-2">
             {navigation.map(item => {
               const Icon = item.icon
 
               return (
                 <button
                   key={item.name}
-                  onClick={() => {
-                    setActivePage(item.name)
-                    setMobileMenuOpen(false)
-                  }}
-                  className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm ${
+                  onClick={() => handleNavigation(item.name)}
+                  className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
                     activePage === item.name
-                      ? 'bg-cyan-400/10 text-cyan-400'
-                      : 'text-slate-400 hover:bg-slate-800'
+                      ? 'bg-cyan-400 text-slate-950'
+                      : 'text-slate-400 hover:bg-slate-900 hover:text-white'
                   }`}
                 >
                   <Icon size={19} />
@@ -97,50 +98,98 @@ function App() {
               )
             })}
           </nav>
+
+          <div className="absolute bottom-6 left-5 right-5 rounded-xl border border-slate-800 bg-slate-900 p-4">
+            <p className="text-sm font-semibold">Keep moving forward.</p>
+            <p className="mt-1 text-xs text-slate-500">
+              Every small step counts.
+            </p>
+          </div>
+        </aside>
+
+        {/* Mobile overlay */}
+        {mobileMenuOpen && (
+          <button
+            aria-label="Close navigation overlay"
+            className="fixed inset-0 z-30 bg-black/60 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
         )}
 
-        <main className="mx-auto max-w-7xl p-5 md:p-8">
-          {activePage === 'Overview' && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold">Welcome back!</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  Your personal progress dashboard.
-                </p>
-              </div>
+        {/* Main content */}
+        <main className="min-w-0 flex-1 p-5 pt-24 lg:ml-64 lg:p-10">
+          <div className="mx-auto max-w-6xl">
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  { label: 'Daily Activities', value: 'Track daily' },
-                  { label: 'Learning Goals', value: 'Keep learning' },
-                  { label: 'Academic Progress', value: 'Stay focused' },
-                  { label: 'Achievements', value: 'Celebrate wins' },
-                ].map(item => (
-                  <div
-                    key={item.label}
-                    className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
-                  >
-                    <p className="text-sm text-slate-400">{item.label}</p>
-                    <p className="mt-3 text-xl font-bold">{item.value}</p>
-                  </div>
-                ))}
-              </div>
+            {/* Page heading */}
+            <div className="mb-8">
+              <p className="text-sm text-cyan-400">
+                YOUR PERSONAL GROWTH SPACE
+              </p>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-                <h3 className="font-semibold">Your journey starts here</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Record daily activities, track learning goals, monitor
-                  academic performance and celebrate your achievements.
-                  Your current entries are saved in this browser.
-                </p>
-              </div>
+              <h2 className="mt-2 text-3xl font-bold">
+                {activePage}
+              </h2>
+
+              <p className="mt-2 text-sm text-slate-400">
+                Track your progress. Build your future.
+              </p>
             </div>
-          )}
 
-          {activePage === 'Daily Log' && <DailyLog />}
-          {activePage === 'Learning' && <Learning />}
-          {activePage === 'Academics' && <Academics />}
-          {activePage === 'Achievements' && <Achievements />}
+            {/* Overview */}
+            {activePage === 'Overview' && (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                  <BookOpen className="mb-4 text-cyan-400" size={25} />
+                  <h3 className="font-semibold">Learning</h3>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Track skills and learning progress.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                  <GraduationCap className="mb-4 text-violet-400" size={25} />
+                  <h3 className="font-semibold">Academics</h3>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Keep track of subjects and academic performance.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                  <Trophy className="mb-4 text-amber-400" size={25} />
+                  <h3 className="font-semibold">Achievements</h3>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Celebrate your milestones.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                  <CalendarDays className="mb-4 text-emerald-400" size={25} />
+                  <h3 className="font-semibold">Daily Log</h3>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Record your daily activities.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                  <CalendarRange className="mb-4 text-pink-400" size={25} />
+                  <h3 className="font-semibold">Calendar</h3>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Manage important dates and upcoming events.
+                  </p>
+                </div>
+
+              </div>
+            )}
+
+            {/* Feature pages */}
+            {activePage === 'Daily Log' && <DailyLog />}
+            {activePage === 'Learning' && <Learning />}
+            {activePage === 'Academics' && <Academics />}
+            {activePage === 'Achievements' && <Achievements />}
+            {activePage === 'Calendar' && <Calendar />}
+
+          </div>
         </main>
       </div>
     </div>
